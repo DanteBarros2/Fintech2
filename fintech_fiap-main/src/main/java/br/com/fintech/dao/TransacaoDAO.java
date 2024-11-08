@@ -23,7 +23,8 @@ public class TransacaoDAO {
                 System.out.println("1 - Cadastrar Transação");
                 System.out.println("2 - Deletar Transação");
                 System.out.println("3 - Pesquisar Transações por ID do Usuário");
-                System.out.println("4 - Sair");
+                System.out.println("4 - Alterar Transação");
+                System.out.println("5 - Sair");
                 opcao = scanner.nextInt();
                 scanner.nextLine(); // Limpa o buffer
 
@@ -38,12 +39,15 @@ public class TransacaoDAO {
                         pesquisarTransacao(scanner, transacaoDAO);
                         break;
                     case 4:
+                        alterarTransacao(scanner, transacaoDAO);
+                        break;
+                    case 5:
                         System.out.println("Saindo...");
                         break;
                     default:
                         System.out.println("Opção inválida.");
                 }
-            } while (opcao != 4);
+            } while (opcao != 5);
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Erro ao conectar ao banco de dados.");
@@ -150,12 +154,52 @@ public class TransacaoDAO {
                 String dsTransacao = rs.getString("ds_transacao");
                 float vlTransacao = rs.getFloat("vl_transacao");
 
-                Transacao transacao = new Transacao((long) idTransacao, idUsuario, idCategoria, tpTransacao, dsTransacao, vlTransacao);
+                Transacao transacao = new Transacao((int) idTransacao, idUsuario, idCategoria, tpTransacao, dsTransacao, vlTransacao);
                 transacoes.add(transacao);
             }
         }
         return transacoes;
     }
+
+    private static void alterarTransacao(Scanner scanner, TransacaoDAO transacaoDAO) throws SQLException, ClassNotFoundException {
+        System.out.print("Digite o ID da Transação a ser alterada: ");
+        int idTransacao = scanner.nextInt();
+        scanner.nextLine(); // Limpa o buffer
+
+        System.out.print("Digite o novo Tipo de Transação: ");
+        String tpTransacao = scanner.nextLine();
+
+        System.out.print("Digite a nova Descrição da Transação: ");
+        String dsTransacao = scanner.nextLine();
+
+        System.out.print("Digite o novo Valor da Transação: ");
+        float vlTransacao = scanner.nextFloat();
+
+        // Alterar a transação no banco de dados
+        Transacao transacao = new Transacao(idTransacao, tpTransacao, dsTransacao, vlTransacao);
+        boolean sucesso = transacaoDAO.alterarTransacao(transacao);
+
+        if (sucesso) {
+            System.out.println("Transação alterada com sucesso!");
+        } else {
+            System.out.println("Erro ao alterar a transação.");
+        }
+    }
+
+    public boolean alterarTransacao(Transacao transacao) throws SQLException, ClassNotFoundException {
+        String sql = "UPDATE TB_FIN_TRANSACAO SET tp_transacao = ?, ds_transacao = ?, vl_transacao = ? " +
+                "WHERE id_transacao = ?";
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, transacao.getTpTransacao());
+            stmt.setString(2, transacao.getDsTransacao());
+            stmt.setFloat(3, transacao.getVlTransacao());
+            stmt.setInt(4, transacao.getIdTransacao());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
 }
-
-

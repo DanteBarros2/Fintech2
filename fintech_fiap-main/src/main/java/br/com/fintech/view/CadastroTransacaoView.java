@@ -1,7 +1,6 @@
 package br.com.fintech.view;
 
 import br.com.fintech.dao.TransacaoDAO;
-import br.com.fintech.factory.ConnectionFactory;
 import br.com.fintech.model.Transacao;
 
 import java.sql.SQLException;
@@ -19,7 +18,8 @@ public class CadastroTransacaoView {
                 System.out.println("1 - Cadastrar Transação");
                 System.out.println("2 - Deletar Transação");
                 System.out.println("3 - Pesquisar Transações por ID do Usuário");
-                System.out.println("4 - Sair");
+                System.out.println("4 - Alterar Transação"); // Nova opção
+                System.out.println("5 - Sair");
                 opcao = scanner.nextInt();
                 scanner.nextLine(); // Limpa o buffer
 
@@ -34,12 +34,15 @@ public class CadastroTransacaoView {
                         pesquisarTransacao(scanner, transacaoDAO);
                         break;
                     case 4:
+                        alterarTransacao(scanner, transacaoDAO); // Chama o método de alteração
+                        break;
+                    case 5:
                         System.out.println("Saindo...");
                         break;
                     default:
                         System.out.println("Opção inválida.");
                 }
-            } while (opcao != 4);
+            } while (opcao != 5);
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Erro ao conectar ao banco de dados.");
@@ -99,5 +102,34 @@ public class CadastroTransacaoView {
             }
         }
     }
+
+    // Método para alterar uma transação
+    private static void alterarTransacao(Scanner scanner, TransacaoDAO transacaoDAO) throws SQLException, ClassNotFoundException {
+        System.out.print("Digite o ID da Transação a ser alterada: ");
+        int idTransacao = scanner.nextInt();
+        scanner.nextLine(); // Limpa o buffer
+
+        System.out.print("Digite o novo Tipo de Transação: ");
+        String tpTransacao = scanner.nextLine();
+
+        System.out.print("Digite a nova Descrição da Transação: ");
+        String dsTransacao = scanner.nextLine();
+
+        System.out.print("Digite o novo Valor da Transação: ");
+        float vlTransacao = scanner.nextFloat();
+
+        // Cria um objeto Transacao com os novos dados
+        Transacao transacao = new Transacao(idTransacao, tpTransacao, dsTransacao, vlTransacao);
+
+        // Chama o método da DAO para alterar a transação
+        boolean sucesso = transacaoDAO.alterarTransacao(transacao);
+
+        if (sucesso) {
+            System.out.println("Transação alterada com sucesso!");
+        } else {
+            System.out.println("Erro ao alterar a transação.");
+        }
+    }
 }
+
 

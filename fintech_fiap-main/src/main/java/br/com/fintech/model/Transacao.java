@@ -2,7 +2,7 @@ package br.com.fintech.model;
 
 public class Transacao {
 
-    private Long idTransacao;
+    private int idTransacao;
     private int idUsuario;      // Adicionado id_usuario
     private int idCategoria;
     private String tpTransacao;
@@ -10,10 +10,10 @@ public class Transacao {
     private float vlTransacao;
 
     // Construtor vazio
-    public Transacao() {}
+    public Transacao(int idTransacao, String tpTransacao, String dsTransacao, float vlTransacao) {}
 
     // Construtor com parâmetros
-    public Transacao(Long idTransacao, int idUsuario, int idCategoria, String tpTransacao, String dsTransacao, float vlTransacao) {
+    public Transacao(int idTransacao, int idUsuario, int idCategoria, String tpTransacao, String dsTransacao, float vlTransacao) {
         this.idTransacao = idTransacao;
         this.idUsuario = idUsuario;      // Atribuição do id_usuario
         this.idCategoria = idCategoria;
@@ -33,11 +33,11 @@ public class Transacao {
 
 
     // Getters e Setters
-    public Long getIdTransacao() {
-        return idTransacao;
+    public int getIdTransacao() {
+        return Math.toIntExact(idTransacao);
     }
 
-    public void setIdTransacao(Long idTransacao) {
+    public void setIdTransacao(int idTransacao) {
         this.idTransacao = idTransacao;
     }
 
