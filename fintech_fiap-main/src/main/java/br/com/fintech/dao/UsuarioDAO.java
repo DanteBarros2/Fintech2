@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioDAO {
     private Connection connection;
@@ -40,25 +42,37 @@ public class UsuarioDAO {
         }
     }
 
-    // Método para pesquisar um usuário por nome ou email
-    public Usuario pesquisarUsuario(String identificador) throws SQLException {
-        String sql = "SELECT * FROM TB_FIN_USUARIO2 WHERE nm_usuario = ? OR ds_email = ?";
+    // Método para atualizar apenas a senha de um usuário pelo nome
+    public boolean atualizarSenhaUsuarioPorNome(String nome, String novaSenha) throws SQLException {
+        String sql = "UPDATE TB_FIN_USUARIO2 SET ds_senha = ? WHERE nm_usuario = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, identificador);
-            stmt.setString(2, identificador);
+            stmt.setString(1, novaSenha);
+            stmt.setString(2, nome);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0; // Retorna true se alguma linha foi afetada
+        }
+    }
 
+
+    public List<Usuario> listarUsuarios() throws SQLException {
+        String sql = "SELECT * FROM TB_FIN_USUARIO2";
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                // Se o usuário for encontrado, cria uma instância de Usuario com os dados
+
+            while (rs.next()) {
+                // Extrai os dados do usuário do ResultSet
                 String nome = rs.getString("nm_usuario");
                 String email = rs.getString("ds_email");
                 String senha = rs.getString("ds_senha");
                 String tipoUsuario = rs.getString("tp_usuario");
 
-                return new Usuario(nome, email, senha, tipoUsuario);
+                // Adiciona o usuário na lista
+                usuarios.add(new Usuario(nome, email, senha, tipoUsuario));
             }
         }
-        return null; // Retorna null se o usuário não for encontrado
+        return usuarios;
     }
 
     // Método para fechar a conexão

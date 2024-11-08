@@ -23,6 +23,14 @@ public class Planejamento {   private int idTransacao;
         this.dtInicio = dtInicio;
         this.dtFim = dtFim;
     }
+    public Planejamento(int idUsuario, String dsPlanejamento, float vlValorAlvo, float vlValorInicial, Date dtInicio, Date dtFim) {
+        this.idUsuario = idUsuario;
+        this.dsPlanejamento = dsPlanejamento;
+        this.vlValorAlvo = vlValorAlvo;
+        this.vlValorInicial = vlValorInicial;
+        this.dtInicio = dtInicio;
+        this.dtFim = dtFim;
+    }
 
     // Getters e Setters
     public int getIdTransacao() {

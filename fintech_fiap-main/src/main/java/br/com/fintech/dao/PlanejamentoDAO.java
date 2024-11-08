@@ -19,19 +19,20 @@ public class PlanejamentoDAO {
 
     // Método para inserir um novo Planejamento
     public void inserirPlanejamento(Planejamento planejamento) throws SQLException {
-        String sql = "INSERT INTO TB_FIN_PLANEJAMENTO (id_transacao, id_usuario, ds_planejamento, vl_valor_alvo, vl_valor_inicial, dt_inicio, dt_fim) VALUES (1, 2, 'nada', 55, 5, 2024-10-30, 1)";
+        String sql = "INSERT INTO TB_FIN_PLANEJAMENTO (id_transacao, id_usuario, ds_planejamento, vl_valor_alvo, vl_valor_inicial, dt_inicio, dt_fim) VALUES (seq_planejamento.nextval, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, planejamento.getIdTransacao());
-            stmt.setInt(2, planejamento.getIdUsuario());
-            stmt.setString(3, planejamento.getDsPlanejamento());
-            stmt.setFloat(4, planejamento.getVlValorAlvo());
-            stmt.setFloat(5, planejamento.getVlValorInicial());
-            stmt.setDate(6, (java.sql.Date) new Date(planejamento.getDtInicio().getTime()));
-            stmt.setDate(7, (java.sql.Date) new Date(planejamento.getDtFim().getTime()));
+            stmt.setInt(1, planejamento.getIdUsuario());
+            stmt.setString(2, planejamento.getDsPlanejamento());
+            stmt.setFloat(3, planejamento.getVlValorAlvo());
+            stmt.setFloat(4, planejamento.getVlValorInicial());
+            stmt.setDate(5, new java.sql.Date(planejamento.getDtInicio().getTime()));
+            stmt.setDate(6, new java.sql.Date(planejamento.getDtFim().getTime()));
 
             stmt.executeUpdate();
         }
     }
+
+
 
     // Método para buscar um Planejamento por ID
     public Planejamento buscarPlanejamentoPorId(int id) throws SQLException {
@@ -80,21 +81,30 @@ public class PlanejamentoDAO {
         return planejamentos;
     }
 
-    // Método para atualizar um Planejamento
     public void atualizarPlanejamento(Planejamento planejamento) throws SQLException {
-        String sql = "UPDATE TB_FIN_PLANEJAMENTO SET id_usuario = ?, ds_planejamento = ?, vl_valor_alvo = ?, vl_valor_inicial = ?, dt_inicio = ?, dt_fim = ? WHERE id_transacao = ?";
+        String sql = "UPDATE TB_FIN_PLANEJAMENTO SET id_usuario = ?, ds_planejamento = ?, vl_valor_alvo = ?, vl_valor_inicial = ?, dt_inicio = ?, dt_fim = ? WHERE id_transacao = ?\n";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, planejamento.getIdUsuario());
             stmt.setString(2, planejamento.getDsPlanejamento());
             stmt.setFloat(3, planejamento.getVlValorAlvo());
             stmt.setFloat(4, planejamento.getVlValorInicial());
-            stmt.setDate(5, (java.sql.Date) new Date(planejamento.getDtInicio().getTime()));
-            stmt.setDate(6, (java.sql.Date) new Date(planejamento.getDtFim().getTime()));
-            stmt.setInt(7, planejamento.getIdTransacao());
+            stmt.setDate(5, new java.sql.Date(planejamento.getDtInicio().getTime()));
+            stmt.setDate(6, new java.sql.Date(planejamento.getDtFim().getTime()));
+            stmt.setInt(7, planejamento.getIdTransacao()); // Atualize aqui para idTransacao
 
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Planejamento atualizado com sucesso!");
+            } else {
+                System.out.println("Nenhum planejamento foi atualizado. Verifique o ID.");
+            }
         }
     }
+
+
+
+
 
     // Método para excluir um Planejamento
     public void excluirPlanejamento(int id) throws SQLException {

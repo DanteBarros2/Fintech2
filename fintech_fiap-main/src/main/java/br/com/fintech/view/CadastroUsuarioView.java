@@ -6,6 +6,7 @@ import br.com.fintech.model.Usuario;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class CadastroUsuarioView {
@@ -23,7 +24,8 @@ public class CadastroUsuarioView {
             System.out.println("Escolha uma opção:");
             System.out.println("1 - Cadastrar Usuário");
             System.out.println("2 - Deletar Usuário por ID");
-            System.out.println("3 - Pesquisar Usuário por Nome ou Email");
+            System.out.println("3 - Listar Todos os Usuários");
+            System.out.println("4 - Alterar Senha do Usuário por Nome");
 
             int opcao = scanner.nextInt();
             scanner.nextLine(); // Limpa o buffer
@@ -70,18 +72,35 @@ public class CadastroUsuarioView {
                     break;
 
                 case 3:
-                    // Pesquisa um usuário pelo nome ou email
-                    System.out.print("Digite o Nome ou E-mail do Usuário para pesquisa: ");
-                    String identificador = scanner.nextLine();
+                    // Lista todos os usuários
+                    System.out.println("Lista de todos os usuários:");
 
-                    // Busca o usuário pelo identificador
-                    Usuario usuarioEncontrado = usuarioDAO.pesquisarUsuario(identificador);
+                    List<Usuario> usuarios = usuarioDAO.listarUsuarios();
+                    if (usuarios.isEmpty()) {
+                        System.out.println("Nenhum usuário encontrado.");
+                    } else {
+                        for (Usuario u : usuarios) {
+                            System.out.println("Nome: " + u.getNmUsuario());
+                            System.out.println("Email: " + u.getDsEmail());
+                            System.out.println("Tipo de Usuário: " + u.getTpUsuario());
+                            System.out.println("---------------");
+                        }
+                    }
+                    break;
 
-                    if (usuarioEncontrado != null) {
-                        System.out.println("Usuário encontrado:");
-                        System.out.println("Nome: " + usuarioEncontrado.getNmUsuario());
-                        System.out.println("Email: " + usuarioEncontrado.getDsEmail());
-                        System.out.println("Tipo de Usuário: " + usuarioEncontrado.getTpUsuario());
+                case 4:
+                    // Altera a senha de um usuário pelo nome
+                    System.out.print("Digite o Nome do Usuário para alterar a senha: ");
+                    String nomeUsuario = scanner.nextLine();
+
+                    System.out.print("Digite a nova senha: ");
+                    String novaSenha = scanner.nextLine();
+
+                    // Atualiza a senha do usuário
+                    boolean senhaAtualizada = usuarioDAO.atualizarSenhaUsuarioPorNome(nomeUsuario, novaSenha);
+
+                    if (senhaAtualizada) {
+                        System.out.println("Senha alterada com sucesso!");
                     } else {
                         System.out.println("Usuário não encontrado.");
                     }
@@ -90,6 +109,10 @@ public class CadastroUsuarioView {
                 default:
                     System.out.println("Opção inválida.");
             }
+
+            // Fecha o scanner e a conexão
+            scanner.close();
+            usuarioDAO.close();
 
         } catch (SQLException e) {
             System.out.println("Erro ao conectar ao banco de dados ou ao realizar a operação.");
