@@ -1,64 +1,76 @@
 package br.com.fintech.model;
 
 public class Usuario {
-    private Long idUsuario;
-    private String nmUsuario;
-    private String dsEmail;
-    private String dsSenha;
-    private String tpUsuario;
 
-    // Construtor com idUsuario
-    public Usuario(Long idUsuario, String nmUsuario, String dsEmail, String dsSenha, String tpUsuario) {
+    private int idUsuario;
+    private String nome;
+    private String email;
+    private String senha;
+    private String tipoUsuario;
+
+    // Construtor completo
+    public Usuario(int idUsuario, String nome, String email, String senha, String tipoUsuario) {
         this.idUsuario = idUsuario;
-        this.nmUsuario = nmUsuario;
-        this.dsEmail = dsEmail;
-        this.dsSenha = dsSenha;
-        this.tpUsuario = tpUsuario;
-    }
-    public Usuario( String nmUsuario, String dsEmail, String dsSenha, String tpUsuario) {
-        this.nmUsuario = nmUsuario;
-        this.dsEmail = dsEmail;
-        this.dsSenha = dsSenha;
-        this.tpUsuario = tpUsuario;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.tipoUsuario = tipoUsuario;
     }
 
     // Construtor vazio
+    public Usuario() {
+    }
 
-    public Long getIdUsuario() {
+    // Getters e Setters
+    public int getIdUsuario() {
         return idUsuario;
     }
 
-    // Removido o setter para idUsuario, pois é um atributo final e não pode ser alterado depois de inicializado
-
-    public String getNmUsuario() {
-        return nmUsuario;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public void setNmUsuario(String nmUsuario) {
-        this.nmUsuario = nmUsuario;
+    public String getNome() {
+        return nome;
     }
 
-    public String getDsEmail() {
-        return dsEmail;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public void setDsEmail(String dsEmail) {
-        this.dsEmail = dsEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public String getDsSenha() {
-        return dsSenha;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setDsSenha(String dsSenha) {
-        this.dsSenha = dsSenha;
+    public String getSenha() {
+        return senha;
     }
 
-    public String getTpUsuario() {
-        return tpUsuario;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
-    public void setTpUsuario(String tpUsuario) {
-        this.tpUsuario = tpUsuario;
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario=" + idUsuario +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", tipoUsuario='" + tipoUsuario + '\'' +
+                '}';
     }
 }
+
+

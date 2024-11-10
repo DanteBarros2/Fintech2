@@ -6,7 +6,7 @@ public class Categoria {
     private String tpCategoria;   // Tipo da categoria
 
     // Construtor vazio
-    public Categoria() {
+    public Categoria(int idCategoria, String descricao) {
     }
 
     // Construtor com parâmetros
